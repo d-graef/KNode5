@@ -14,9 +14,11 @@
 
 #include "knfolder.h"
 
+#include <kconfig.h>
+#include <klocale.h>
+#include <QFileInfo>
 #include <QStandardPaths>
 
-#include "articlewidget.h"
 #include "knarticlefactory.h"
 #include "knarticlemanager.h"
 #include "knarticlewindow.h"
@@ -25,12 +27,10 @@
 #include "knglobals.h"
 #include "knmainwidget.h"
 #include "knode_debug.h"
+#include "messageview/instances.h"
 #include "utilities.h"
 #include "utils/scoped_cursor_override.h"
 
-#include <QFileInfo>
-#include <kconfig.h>
-#include <klocale.h>
 
 using namespace KNode;
 using namespace KNode::Utilities;
@@ -422,7 +422,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
       (*it)->setEndOffset( m_boxFile.pos() ); //save offset
 
       //update
-      ArticleWidget::articleChanged( (*it) );
+      MessageView::Instances::articleChanged( (*it) );
       i_ndexDirty=true;
 
     }
@@ -471,7 +471,7 @@ void KNFolder::removeArticles( KNLocalArticle::List &l, bool del )
     //update
     KNGlobals::self()->articleFactory()->deleteComposerForArticle(a);
     ArticleWindow::closeAllWindowsForArticle( a );
-    ArticleWidget::articleRemoved( a );
+    MessageView::Instances::articleRemoved( a );
 
     KNGlobals::self()->articleManager()->notifyArticleChanged(a, true);
 

@@ -15,12 +15,18 @@
 #include "kngroupmanager.h"
 
 #include <KCodecs/KCharsets>
+#include <kiconloader.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <QByteArray>
+#include <QDir>
+#include <QFile>
 
-#include "articlewidget.h"
 #include "knmainwidget.h"
 #include "knarticlemanager.h"
 #include "knnntpaccount.h"
 #include "kncleanup.h"
+#include "messageview/instances.h"
 #include "scheduler.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
@@ -31,16 +37,6 @@
 #include "knode_debug.h"
 #include "settings.h"
 #include "utils/locale.h"
-
-
-#include <QByteArray>
-#include <QDir>
-#include <QFile>
-
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kiconloader.h>
-
 #include "groupselection/group_subscription_dialog.h"
 #include "knaccountmanager.h"
 
@@ -469,7 +465,7 @@ bool KNGroupManager::unsubscribeGroup( KNGroup::Ptr g )
   }
 
   ArticleWindow::closeAllWindowsForCollection( g );
-  ArticleWidget::collectionRemoved( g );
+  MessageView::Instances::collectionRemoved( g );
 
   acc=g->account();
 

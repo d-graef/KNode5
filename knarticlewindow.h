@@ -25,7 +25,9 @@
 
 namespace KNode {
 
-class ArticleWidget;
+namespace MessageView {
+    class ArticleWidget;
+}
 
 /** A stand-alone article viewer window. */
 class ArticleWindow : public KXmlGuiWindow  {
@@ -40,7 +42,7 @@ class ArticleWindow : public KXmlGuiWindow  {
     /// Destroy this article viewer window.
     ~ArticleWindow();
     /** Returns the article widget of this window. */
-    ArticleWidget* articleWidget() const { return mArticleWidget; }
+    MessageView::ArticleWidget* articleWidget() const { return mArticleWidget; }
 
     /// List of article windows.
     typedef QList<KNode::ArticleWindow*> List;
@@ -74,7 +76,7 @@ class ArticleWindow : public KXmlGuiWindow  {
 
   protected:
     /// The article widget of this window.
-    ArticleWidget *mArticleWidget;
+    MessageView::ArticleWidget *mArticleWidget;
     /// List of all article windows.
     static List mInstances;
 };

@@ -43,9 +43,11 @@ class KNArticleFactory;
 class KNFilterManager;
 class KNFilterSelectAction;
 namespace KNode {
-  class ArticleWidget;
   namespace MessageList {
     class HeadersWidget;
+  }
+  namespace MessageView {
+    class ArticleWidget;
   }
 }
 class KActionCollection;
@@ -84,7 +86,7 @@ public:
   /** Returns the article list view. */
   KNode::MessageList::HeadersWidget* headerView() const { return mHeadersView; }
   /** Returns the article viewer. */
-  KNode::ArticleWidget* articleViewer() const     { return mArticleViewer; }
+  KNode::MessageView::ArticleWidget* articleViewer() const { return mArticleViewer; }
   KSqueezedTextLabel*  statusBarLabelGroup() const { return s_tatusGroup; }
   KSqueezedTextLabel*  statusBarLabelFilter() const { return s_tatusFilter; }
   public slots: //The dcop interface
@@ -170,7 +172,7 @@ protected:
   bool eventFilter(QObject *, QEvent *);
 
   //GUI
-  KNode::ArticleWidget *mArticleViewer;
+  KNode::MessageView::ArticleWidget *mArticleViewer;
   KNCollectionView *c_olView;
   KNode::MessageList::HeadersWidget *mHeadersView;
   bool b_lockui;

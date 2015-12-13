@@ -23,7 +23,6 @@
 #include <QEvent>
 #include <QMenu>
 #include <QLabel>
-#include <QShortcut>
 #include <QSplitter>
 #include <QVBoxLayout>
 
@@ -51,14 +50,13 @@ using KPIM::RecentAddresses;
 #include <mailtransport/transportmanager.h>
 using MailTransport::TransportManager;
 
-//GUI
+
 #include "knarticlewindow.h"
 #include "kncollectionview.h"
 #include "kncollectionviewitem.h"
 #include "messagelist/headers_widget.h"
-
-//Core
-#include "articlewidget.h"
+#include "messageview/article_widget.h"
+#include "messageview/instances.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knarticlemanager.h"
@@ -75,7 +73,6 @@ using MailTransport::TransportManager;
 #include "knmemorymanager.h"
 #include "scheduler.h"
 #include "settings.h"
-
 #include "knodeadaptor.h"
 
 using namespace KNode;
@@ -111,7 +108,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   mSecondSplitter->setObjectName( "mSecondSplitter" );
 
   //article view
-  mArticleViewer = new ArticleWidget( mPrimarySplitter, client, actionCollection(), true/*main viewer*/ );
+  mArticleViewer = new MessageView::ArticleWidget( mPrimarySplitter, client, true/*main viewer*/ );
 
   //collection view
   c_olView = new KNCollectionView( mSecondSplitter );
@@ -122,11 +119,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
            this, SLOT(slotCollectionRMB(QTreeWidgetItem*,QPoint)) );
   connect( c_olView, SIGNAL(renamed(QTreeWidgetItem*)),
            this, SLOT(slotCollectionRenamed(QTreeWidgetItem*)) );
-
-  new QShortcut(Qt::Key_Up, mArticleViewer, SLOT(scrollUp()));
-  new QShortcut(Qt::Key_Down, mArticleViewer, SLOT(scrollDown()));
-  new QShortcut(Qt::Key_PageUp, mArticleViewer, SLOT(scrollPrior()));
-  new QShortcut(Qt::Key_PageDown, mArticleViewer, SLOT(scrollNext()));
 
   //header view
   mHeadersView = new MessageList::HeadersWidget( mSecondSplitter );
@@ -810,7 +802,7 @@ void KNMainWidget::prepareShutdown()
   qCDebug(KNODE_LOG);
 
   //cleanup article-views
-  ArticleWidget::cleanup();
+  MessageView::Instances::cleanup();
 
   ArticleWindow::closeAllWindows();
 
@@ -833,7 +825,7 @@ void KNMainWidget::prepareShutdown()
   saveOptions();
   RecentAddresses::self(knGlobals.config())->save( knGlobals.config() );
   c_fgManager->syncConfig();
-  a_rtManager->deleteTempFiles();
+  qCDebug(KNODE_LOG) << "Port" << "Notify the ArticleWidget (and the MessageViewer::Viewer)?";
   g_rpManager->syncGroups();
   f_olManager->syncFolders();
   f_ilManager->prepareShutdown();
@@ -858,14 +850,14 @@ bool KNMainWidget::queryClose()
 void KNMainWidget::fontChange( const QFont & )
 {
   a_rtFactory->configChanged();
-  ArticleWidget::configChanged();
+  MessageView::Instances::configChanged();
   configChanged();
 }
 
 
 void KNMainWidget::paletteChange( const QPalette & )
 {
-  ArticleWidget::configChanged();
+  MessageView::Instances::configChanged();
   configChanged();
 }
 

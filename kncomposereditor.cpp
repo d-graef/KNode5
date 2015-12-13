@@ -52,14 +52,6 @@ void KNComposerEditor::changeHighlighterColors(KPIMTextEdit::EMailQuoteHighlight
   highlighter->setQuoteColor(col1, col2, col3, col4);
 }
 
-void KNComposerEditor::slotRot13()
-{
-  QTextCursor cursor = textCursor();
-  if ( cursor.hasSelection() )
-    insertPlainText( MessageComposer::Util::rot13( cursor.selectedText() ) );
-  //FIXME: breaks HTML formatting
-}
-
 
 void KNComposerEditor::slotRemoveBox()
 {

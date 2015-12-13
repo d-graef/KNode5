@@ -15,19 +15,18 @@
 
 #include "knarticlewindow.h"
 
+#include <kactioncollection.h>
+#include <kconfig.h>
+#include <kstandardaction.h>
+#include <kwindowsystem.h>
+#include <QAction>
 #include <QDebug>
 
-#include "articlewidget.h"
 #include "knode_debug.h"
+#include "messageview/article_widget.h"
 #include "utilities.h"
 #include "knglobals.h"
 #include "knmainwidget.h"
-
-#include <kwindowsystem.h>
-#include <kstandardaction.h>
-#include <kconfig.h>
-#include <QAction>
-#include <kactioncollection.h>
 
 using namespace KNode;
 
@@ -113,7 +112,7 @@ ArticleWindow::ArticleWindow( KNArticle::Ptr art )
   if ( art )
     setCaption( art->subject()->asUnicodeString() );
 
-  mArticleWidget = new ArticleWidget( this, this, actionCollection() );
+  mArticleWidget = new MessageView::ArticleWidget( this, this, actionCollection() );
   mArticleWidget->setArticle( art );
   setCentralWidget( mArticleWidget );
 

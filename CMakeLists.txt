@@ -304,8 +304,6 @@ set(knodecommon_LIB_SRCS
    aboutdata.cpp
    knglobals.cpp
    kncollectionview.cpp
-   articlewidget.cpp
-#    csshelper.cpp
    composer/attachment_view.cpp
    composer/followupto_combobox.cpp
    configuration/identity_widget.cpp
@@ -321,6 +319,8 @@ set(knodecommon_LIB_SRCS
    groupselection/model/selection_grouping_proxy_model.cpp
    groupselection/model/group_model.cpp
    groupselection/helper/group_list_date_picker.cpp
+   messageview/article_widget.cpp
+   messageview/instances.cpp
    utils/locale.cpp
    utils/startup.cpp
    messagelist/headers_widget.cpp
@@ -369,6 +369,7 @@ target_link_libraries(knodecommon
         KF5::Libkleo
         KF5::MailTransport
         KF5::MessageComposer
+        KF5::MessageViewer
         KF5::Mime
         KF5::SonnetUi
         KF5::XmlGui
@@ -431,5 +432,8 @@ install(FILES knodeui.rc
 install(FILES headers.rc
         DESTINATION ${KDE_INSTALL_DATADIR}/knode)
 install(FILES org.kde.knode.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR} )
+
+install(FILES messageview/knode_error.html
+        DESTINATION ${KDE_INSTALL_DATADIR}/messageviewer/about/default)
 
 add_subdirectory(icons)

@@ -29,10 +29,10 @@
       <property name="spacing" >
        <number>6</number>
       </property>
-      <item row="4" column="1" >
+      <item row="3" column="1">
        <widget class="KLineEdit" name="kcfg_quoteCharacters" />
       </item>
-      <item row="4" column="0" >
+      <item row="3" column="0">
        <widget class="QLabel" name="label" >
         <property name="text" >
          <string>Recognized q&amp;uote characters:</string>
@@ -46,13 +46,6 @@
        <widget class="QCheckBox" name="kcfg_removeTrailingNewlines" >
         <property name="text" >
          <string>Re&amp;move trailing empty lines</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="2" >
-       <widget class="QCheckBox" name="kcfg_showRefBar" >
-        <property name="text" >
-         <string>Show reference bar</string>
         </property>
        </widget>
       </item>
@@ -85,13 +78,6 @@
       <property name="spacing" >
        <number>6</number>
       </property>
-      <item>
-       <widget class="QCheckBox" name="kcfg_openAttachmentsOnClick" >
-        <property name="text" >
-         <string>Open a&amp;ttachments on click</string>
-        </property>
-       </widget>
-      </item>
       <item>
        <widget class="QCheckBox" name="kcfg_showAlternativeContents" >
         <property name="text" >

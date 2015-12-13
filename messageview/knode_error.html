@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style type="text/css">
+        #header {
+            margin: .5em 0px 0px 0.1em;
+            padding: 0px;
+            width: 90%;
+            border-bottom: solid gray 2px;
+        }
+        #header h1 {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <h1>{% i18n "An error occurred." %}</h1>
+    </div>
+
+    <div id="main">
+        <div id="message">
+            {{ errorMessage|escape|linebreaks }}
+        </div>
+    </div>
+</body>
+
+</html>

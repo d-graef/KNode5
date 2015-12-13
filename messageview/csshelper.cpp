@@ -11,10 +11,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include "csshelper.h"
-#include "knglobals.h"
-#include "settings.h"
-
 
 KNode::CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   MessageViewer::CSSHelperBase( pd )
@@ -35,5 +31,4 @@ KNode::CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   mBodyFont = mPrintFont = knGlobals.settings()->articleFont();
   mFixedFont = mFixedPrintFont = knGlobals.settings()->articleFixedFont();
 
-  recalculatePGPColors();
 }

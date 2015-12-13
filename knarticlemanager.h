@@ -43,10 +43,6 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     //content handling
     void deleteTempFiles();
-    void saveContentToFile(KMime::Content *c, QWidget *parent);
-    void saveArticleToFile( KNArticle::Ptr a, QWidget *parent );
-    QString saveContentToTemp(KMime::Content *c);
-    void openContent(KMime::Content *c);
 
     //listview handling
     void showHdrs();
@@ -116,7 +112,6 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNArticleFilter *f_ilter;
     KNFilterManager *f_ilterMgr;
     KNode::SearchDialog *s_earchDlg;
-    QList<QTemporaryFile*> mTempFiles;
 
   Q_SIGNALS:
     void filterChanged(KNArticleFilter *f);

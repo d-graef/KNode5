@@ -337,13 +337,6 @@ KNComposer::KNComposer( KNLocalArticle::Ptr a, const QString &text, const QStrin
   connect(undoRewrap, SIGNAL(triggered(bool)), SLOT(slotUndoRewrap()));
   undoRewrap->setEnabled(!u_nwraped.isNull());
 
-  QAction *rot13 = actionCollection()->addAction("tools_rot13");
-  rot13->setIcon(KIcon("document-encrypt"));
-  rot13->setText(i18n("S&cramble (Rot 13)"));
-  connect(rot13, SIGNAL(triggered(bool)), v_iew->editor(), SLOT(slotRot13()));
-  rot13->setEnabled(false);
-  connect(v_iew->editor(), SIGNAL(copyAvailable(bool)), rot13, SLOT(setEnabled(bool)));
-
   a_ctExternalEditor = actionCollection()->addAction("external_editor");
   a_ctExternalEditor->setIcon(KIcon("system-run"));
   a_ctExternalEditor->setText(i18n("Start &External Editor"));

@@ -136,10 +136,6 @@
       <label>Recognized quote characters</label>
       <default>&gt;:</default>
     </entry>
-    <entry name="openAttachmentsOnClick" key="openAtt" type="Bool">
-      <label>Open attachments on click</label>
-      <default>false</default>
-    </entry>
     <entry name="showAlternativeContents" key="showAlts" type="Bool">
       <label>Show alternative contents as attachments</label>
       <default>false</default>
@@ -147,10 +143,6 @@
     <entry name="useFixedFont" key="articleBodyFixedFont" type="Bool">
       <label>Use fixed font</label>
       <default>false</default>
-    </entry>
-    <entry name="showRefBar" type="Bool">
-      <label>Show reference bar</label>
-      <default>true</default>
     </entry>
     <entry name="alwaysShowHTML" type="Bool">
       <label>Prefer HTML to plain text</label>

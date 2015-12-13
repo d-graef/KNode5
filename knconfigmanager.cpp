@@ -19,12 +19,14 @@
 #include <QDebug>
 
 #include "knode_debug.h"
+#include "messageview/instances.h"
 #include "utilities.h"
 #include "knglobals.h"
-#include "articlewidget.h"
 #include "knarticlefactory.h"
 #include "knmainwidget.h"
 #include "settings.h"
+
+using namespace KNode;
 
 
 KNConfigManager::KNConfigManager( QObject *parent )
@@ -99,7 +101,7 @@ void KNConfigDialog::slotConfigCommitted()
 {
   knGlobals.configManager()->syncConfig();
 
-  KNode::ArticleWidget::configChanged();
+  MessageView::Instances::configChanged();
   if(knGlobals.top)
     knGlobals.top->configChanged();
   KNGlobals::self()->articleFactory()->configChanged();

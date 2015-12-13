@@ -14,8 +14,6 @@
 
 #include "knarticlemanager.h"
 
-#include "utils/scoped_cursor_override.h"
-
 #include <krun.h>
 #include <kmessagebox.h>
 #include <kmimetypetrader.h>
@@ -24,10 +22,10 @@
 #include <QDir>
 #include <QTemporaryFile>
 
-#include "articlewidget.h"
 #include "knmainwidget.h"
 #include "knglobals.h"
 #include "knode_debug.h"
+#include "messageview/instances.h"
 #include "utilities.h"
 #include "kngroupmanager.h"
 #include "knsearchdialog.h"
@@ -42,6 +40,7 @@
 #include "knfoldermanager.h"
 #include "nntpjobs.h"
 #include "settings.h"
+#include "utils/scoped_cursor_override.h"
 
 using namespace KNode;
 using namespace KNode::Utilities;
@@ -61,116 +60,6 @@ KNArticleManager::KNArticleManager() : QObject(0)
 KNArticleManager::~KNArticleManager()
 {
   delete s_earchDlg;
-}
-
-
-void KNArticleManager::deleteTempFiles()
-{
-  qDeleteAll(mTempFiles);
-  mTempFiles.clear();
-}
-
-
-void KNArticleManager::saveContentToFile(KMime::Content *c, QWidget *parent)
-{
-  KNSaveHelper helper(c->contentType()->name(),parent);
-
-  QFile *file = helper.getFile(i18n("Save Attachment"));
-
-  if (file) {
-    QByteArray data=c->decodedContent();
-    if (file->write(data.data(), data.size()) == -1 )
-      KNHelper::displayExternalFileError( parent );
-  }
-}
-
-
-void KNArticleManager::saveArticleToFile( KNArticle::Ptr a, QWidget *parent )
-{
-  QString fName = a->subject()->asUnicodeString();
-  QString s = "";
-
-  for ( int i = 0; i < fName.length(); ++i )
-    if (fName[i].isLetterOrNumber())
-      s.append(fName[i]);
-    else
-      s.append(' ');
-  fName = s.simplified();
-  fName.replace(QRegExp("[\\s]"),"_");
-
-  KNSaveHelper helper(fName,parent);
-  QFile *file = helper.getFile(i18n("Save Article"));
-
-  if (file) {
-    QByteArray tmp=a->encodedContent(false);
-    if ( file->write(tmp.data(), tmp.size()) == -1 )
-      KNHelper::displayExternalFileError( parent );
-  }
-}
-
-
-QString KNArticleManager::saveContentToTemp(KMime::Content *c)
-{
-  QString path;
-  qCDebug(KNODE_LOG) << "Port";
-#if 0
-  KMime::Headers::Base *pathHdr=c->headerByType("X-KNode-Tempfile");  // check for existing temp file
-
-  if(pathHdr) {
-    path = pathHdr->asUnicodeString();
-    bool found=false;
-
-    // lets see if the tempfile-path is still valid...
-    for ( QList<QTemporaryFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
-      if ( (*it)->fileName() == path ) {
-        found = true;
-        break;
-      }
-    }
-
-    if (found)
-      return path;
-    else
-      c->removeHeader("X-KNode-Tempfile");
-  }
-#endif
-
-  QTemporaryFile* tmpFile = new QTemporaryFile();
-  if (!tmpFile->open()) {
-    KNHelper::displayTempFileError();
-    delete tmpFile;
-    return QString();
-  }
-
-  mTempFiles.append(tmpFile);
-  QByteArray data=c->decodedContent();
-  tmpFile->write(data.data(), data.size());
-  tmpFile->flush();
-  path=tmpFile->fileName();
-  qCDebug(KNODE_LOG) << "Port";
-#if 0
-  pathHdr=new KMime::Headers::Generic("X-KNode-Tempfile", c, path, "UTF-8");
-  c->setHeader(pathHdr);
-#endif
-
-  return path;
-}
-
-
-void KNArticleManager::openContent(KMime::Content *c)
-{
-  QString path=saveContentToTemp(c);
-  if(path.isNull()) return;
-
-  KService::Ptr offer = KMimeTypeTrader::self()->preferredService(c->contentType()->mimeType(), "Application");
-  QList<QUrl> lst;
-  QUrl url = QUrl::fromLocalFile(path);
-  lst.append(url);
-
-  if (offer)
-    KRun::run(*offer, lst, knGlobals.top);
-  else
-    KRun::displayOpenWithDialog(lst, knGlobals.top);
 }
 
 
@@ -289,7 +178,7 @@ bool KNArticleManager::unloadArticle( KNArticle::Ptr a, bool force )
   if (!force && a->isNotUnloadable())
     return false;
 
-  if ( !force && ( ArticleWidget::articleVisible( a ) ) )
+  if ( !force && ( MessageView::Instances::articleVisible( a ) ) )
     return false;
 
   if (!force && ( a->type()== KNArticle::ATlocal ) &&
@@ -300,7 +189,7 @@ bool KNArticleManager::unloadArticle( KNArticle::Ptr a, bool force )
     if (!force)
       return false;
 
-  ArticleWidget::articleRemoved( a );
+  MessageView::Instances::articleRemoved( a );
   if ( a->type() != KNArticle::ATlocal )
     KNGlobals::self()->articleFactory()->deleteComposerForArticle( boost::static_pointer_cast<KNLocalArticle>( a ) );
 
@@ -637,21 +526,14 @@ void KNArticleManager::processJob(KNJobData *j)
   if(j->type()==KNJobData::JTfetchArticle && !j->canceled()) {
     KNRemoteArticle::Ptr a = boost::static_pointer_cast<KNRemoteArticle>( j->data() );
     if(j->success()) {
-      ArticleWidget::articleChanged( a );
+      MessageView::Instances::articleChanged( a );
       if(!a->isOrphant()) //orphant articles are deleted by the displaying widget
         knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticle>( a ) );
 
       notifyArticleChanged(a);
     } else {
       if ( j->error() == KIO::ERR_DOES_NOT_EXIST ) {
-        // article is not available at the server anymore
-        QString msgId = a->messageID()->as7BitString( false );
-        // strip of '<' and '>'
-        msgId = msgId.mid( 1, msgId.length() - 2 );
-        ArticleWidget::articleLoadError( a,
-            i18n("The article you requested is not available on your news server."
-            "<br />You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.",
-              msgId ) );
+        MessageView::Instances::articleLoadError( a, i18n("The article you requested is not available on your news server.") );
         // mark article as read
         if ( knGlobals.settings()->autoMark() && !a->isOrphant() ) {
           KNRemoteArticle::List l;
@@ -659,7 +541,7 @@ void KNArticleManager::processJob(KNJobData *j)
           setRead( l, true );
         }
       } else
-        ArticleWidget::articleLoadError( a, j->errorString() );
+        MessageView::Instances::articleLoadError( a, j->errorString() );
     }
   }
 

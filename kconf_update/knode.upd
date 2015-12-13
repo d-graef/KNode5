@@ -24,3 +24,9 @@ RemoveGroup=HeaderView
 Group=APPEARANCE,READNEWS
 Key=quicksearch,showHeadersSearchLine
 RemoveGroup=APPEARANCE
+# Not used anymore
+Group=READNEWS
+RemoveKey=openAtt
+RemoveKey=showRefBar
+RemoveKey=headerStyle
+RemoveKey=attachmentStyle

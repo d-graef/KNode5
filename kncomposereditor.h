@@ -42,11 +42,6 @@ class KNComposerEditor : public KMeditor
   public slots:
     void slotRemoveBox();
     void slotAddBox();
-
-    /**
-     * Warning: This function switches back to plain text mode.
-     */
-    void slotRot13();
 };
 
 #endif
