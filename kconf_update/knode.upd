@@ -1,0 +1,26 @@
+Id=001
+File=knoderc
+# Remove left over from version < 4.4.0
+# r461980 (Replace KDockWidgets with two QSplitters)
+RemoveGroup=dock_configuration
+# r936081 (Port Knode folders/groups view to FolderTreeWidget)
+Group=GroupView
+RemoveKey=UnreadColumn
+RemoveKey=TotalColumn
+RemoveKey=ColumnOrder
+RemoveKey=ColumnWidths
+RemoveKey=SortAscending
+RemoveKey=SortColumn
+RemoveKey=UnreadColumn
+
+Id=002
+File=knoderc
+# sortByThreadChangeDate moved to knode.kcfg
+Group=HeaderView,READNEWS
+Key=sortByThreadChangeDate
+# Drop state of the pre-qt4 header view
+RemoveGroup=HeaderView
+# showHeadersSearchLine moved to knode.kcfg
+Group=APPEARANCE,READNEWS
+Key=quicksearch,showHeadersSearchLine
+RemoveGroup=APPEARANCE
