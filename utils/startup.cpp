@@ -83,11 +83,14 @@ void Startup::migrateKde4To5() const
   // Data
   if(migrating) {
     Kdelibs4Migration datamigrator;
-    const QDir oldDataDir( datamigrator.locateLocal("data", "knode/") );
+    const QString oldDataDirPath( datamigrator.saveLocation("data", "knode/") );
+    if(!oldDataDirPath.isEmpty()) {
+    const QDir oldDataDir( oldDataDirPath );
     const QDir newDataDir( QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + QString::fromLatin1("/knode/") );
     if(oldDataDir.exists() && !newDataDir.exists()) {
         qCDebug(KNODE_LOG) << "Moving data from" << oldDataDir.absolutePath() << "to" << newDataDir.absolutePath();
         QDir().rename(oldDataDir.absolutePath(), newDataDir.absolutePath());
+    }
     }
   }
 }
@@ -150,10 +153,10 @@ void Startup::convertPre45Identity( KConfigGroup &cg ) const
     if ( !cg.readEntry( "sigFile" ).trimmed().isEmpty() ) {
       if ( cg.readEntry( "UseSigGenerator", false ) ) {
         // output of a command execution
-        signature.setUrl( cg.readEntry( "sigFile" ), true/*isExecutable*/ );
+        signature.setPath( cg.readEntry( "sigFile" ), true/*isExecutable*/ );
       } else {
         // content of a file
-        signature.setUrl( cg.readEntry( "sigFile" ), false/*isExecutable*/ );
+        signature.setPath( cg.readEntry( "sigFile" ), false/*isExecutable*/ );
       }
     }
   } else if ( !cg.readEntry( "sigText" ).trimmed().isEmpty() ) {

@@ -62,7 +62,7 @@ class ArticleWidget : public QWidget
          */
         void displayErrorMessage(const QString& error) const;
 
-        bool atBottom() const;
+        void atBottom();
         void scrollNext();
 
         /** Change the article to display. */

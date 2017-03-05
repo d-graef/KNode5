@@ -188,9 +188,9 @@ void ArticleWidget::displayErrorMessage(const QString& error) const
 }
 
 
-bool ArticleWidget::atBottom() const
+void ArticleWidget::atBottom()
 {
-    return mViewer->atBottom();
+    mViewer->atBottom();
 }
 void ArticleWidget::scrollNext()
 {

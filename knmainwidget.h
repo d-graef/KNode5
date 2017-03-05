@@ -346,6 +346,7 @@ protected slots:
   //--------------------------- </Actions> -----------------------------
 
 private:
+  void slotPageIsScrolledToBottom(bool isAtBottom);
   KSqueezedTextLabel *s_tatusGroup; // widget used in the statusBar() for the group status
   KSqueezedTextLabel *s_tatusFilter;
   KXMLGUIClient *m_GUIClient;

@@ -1141,7 +1141,12 @@ void KNMainWidget::slotNavNextUnreadThread()
 void KNMainWidget::slotNavReadThrough()
 {
   qCDebug(KNODE_LOG);
-  if ( !mArticleViewer->atBottom() )
+  mArticleViewer->atBottom();
+}
+
+void KNMainWidget::slotPageIsScrolledToBottom(bool isAtBottom)
+{
+  if (isAtBottom)
     mArticleViewer->scrollNext();
   else if(g_rpManager->currentGroup() != 0)
     slotNavNextUnreadArt();
